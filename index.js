@@ -31,9 +31,7 @@
     authDB.on('disconnected', () => {
         console.log(`Authentication database Disconnected.\n`.bold.red);
     });
-    //End Auth Db connection
-    
-    //middleware : Find the DB Name from token and connect db.
+
     app.use(dynamicDB.authorizeDB);
     
     require('./routes')(router);
@@ -41,7 +39,7 @@
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(function (req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin', '*'); //Enable CORS
+        res.setHeader('Access-Control-Allow-Origin', '*'); 
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
         next();
