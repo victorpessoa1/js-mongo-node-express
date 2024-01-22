@@ -1,20 +1,22 @@
-import { CreatePersonController } from "./controller/Create.js";
-import { ReadPersonController } from "./controller/Read.js"
-import { Router } from "express";
-import { UpdatePersonController } from "./controller/Update.js";
-import { DeletePersonController } from "./controller/Delete.js";
+var authServer = require('./commonservice/jwtverify');
 
-const router = Router()
+module.exports = function (router) {
+    //Routing for User Creation
+    var userinfo = require('./controller/usercontroller')
+    router.post('/createClient', userinfo.createClient);
+    router.post('/createUser', userinfo.createUser);
+    router.post('/login', userinfo.userLogin);
 
-const create = new CreatePersonController
-const read = new ReadPersonController
-const update = new UpdatePersonController
-const del = new DeletePersonController
+    //Routing for School Creation
+    var school = require('./controller/schoolcontroller')
+    router.post('/create/school', school.CreateSchool);
+    router.get('/getAllSchool', permission('get all school record'), school.getAllSchool);
 
-router.post('/create', create.CreatePerson)
-router.get("/people", read.Getpeople)
-router.get("/person/:id", read.GetPerson)
-router.put("/update/:id", update.UpdatePerson)
-router.delete("/person/:id", del.DeletePerson)
+    router.get('/getRedisData', school.getRedisServerData);
+}
 
-export {router}
+var permission = function (permissions) {
+    return function (req, res, next) {
+        authServer.permission(req, res, next, permissions);
+    };
+};
